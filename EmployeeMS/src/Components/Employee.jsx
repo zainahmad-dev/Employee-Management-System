@@ -53,7 +53,7 @@ function Employee() {
                 <td>{employee.address}</td>
                 <td>{employee.salary}</td>
                 <td>
-                  <Link className='btn btn-primary btn-sm me-2'>Edit</Link>
+                   <Link className='btn btn-primary btn-sm me-2'>Edit</Link>
                   <button className='btn btn-danger btn-sm'>Delete</button>
                 </td>
               </tr>
