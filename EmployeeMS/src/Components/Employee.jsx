@@ -23,7 +23,7 @@ function Employee() {
         <h3>Employee List</h3>
       </div>
 
-      <Link to="/dashboard/create" className='btn btn-success mb-3'>Add Employee</Link>
+      <Link className='btn btn-success mb-3'>Add Employee</Link>
 
       <div className='table-responsive'>
         <table className='table'>
