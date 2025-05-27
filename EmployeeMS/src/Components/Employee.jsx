@@ -1,32 +1,43 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
 
-function Employee() {
-  const [data, setData] = useState([]);
+const Employee = () => {
+  const [employee, setEmployee] = useState([]);
+  const navigate = useNavigate()
 
   useEffect(() => {
-    axios.get('http://localhost:3000/auth/employee')
-      .then(res => {
-        if (res.data.Status) {
-          setData(res.data.Result);
+    axios
+      .get("http://localhost:3000/auth/employee")
+      .then((result) => {
+        if (result.data.Status) {
+          setEmployee(result.data.Result);
         } else {
-          alert("Error fetching employee data");
+          alert(result.data.Error);
         }
       })
-      .catch(err => console.log(err));
+      .catch((err) => console.log(err));
   }, []);
-
+  const handleDelete = (id) => {
+    axios.delete('http://localhost:3000/auth/delete_employee/'+id)
+    .then(result => {
+        if(result.data.Status) {
+            window.location.reload()
+        } else {
+            alert(result.data.Error)
+        }
+    })
+  } 
   return (
-    <div className='px-5 py-3'>
-      <div className='d-flex justify-content-center mt-2'>
+    <div className="px-5 mt-3">
+      <div className="d-flex justify-content-center">
         <h3>Employee List</h3>
       </div>
-
-      <Link className='btn btn-success mb-3'>Add Employee</Link>
-
-      <div className='table-responsive'>
-        <table className='table'>
+      <Link to="/dashboard/add_employee" className="btn btn-success">
+        Add Employee
+      </Link>
+      <div className="mt-3">
+        <table className="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -38,23 +49,31 @@ function Employee() {
             </tr>
           </thead>
           <tbody>
-            {data.map((employee, index) => (
-              <tr key={index}>
-                <td>{employee.name}</td>
+            {employee.map((e) => (
+              <tr>
+                <td>{e.name}</td>
                 <td>
-                  <img 
-                    src={`http://localhost:3000/Images/${employee.image}`} 
-                    alt={employee.name} 
-                    className='employee_image' 
-                    style={{ width: '50px', height: '50px', objectFit: 'cover' }}
+                  <img
+                    src={`http://localhost:3000/Images/` + e.image}
+                    className="employee_image"
                   />
                 </td>
-                <td>{employee.email}</td>
-                <td>{employee.address}</td>
-                <td>{employee.salary}</td>
+                <td>{e.email}</td>
+                <td>{e.address}</td>
+                <td>{e.salary}</td>
                 <td>
-                   <Link className='btn btn-info btn-sm me-2'>Edit</Link>
-                  <button className='btn btn-warning btn-sm'>Delete</button>
+                  <Link
+                    to={`/dashboard/edit_employee/` + e.id}
+                    className="btn btn-info btn-sm me-2"
+                  >
+                    Edit
+                  </Link>
+                  <button
+                    className="btn btn-warning btn-sm"
+                    onClick={() => handleDelete(e.id)}
+                  >
+                    Delete
+                  </button>
                 </td>
               </tr>
             ))}
@@ -63,6 +82,6 @@ function Employee() {
       </div>
     </div>
   );
-}
+};
 
 export default Employee;
